@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Toast
 import com.example.baseframework.DefaultNavigationBar
 import com.example.baselibrary.dialog.AlertDialog
+import com.example.baselibrary.http.HttpUtils
+import com.example.baselibrary.http.OkHttpEngine
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -34,10 +36,15 @@ class MainActivity : AppCompatActivity() {
             dialog.setOnClickListener(R.id.account_icon_weibo, View.OnClickListener {
                 Toast.makeText(this, "分享到微博", Toast.LENGTH_LONG).show()
             })
-
-
         }
 
+        // 测试网络框架
+        testHttpEngine()
+    }
+
+    private fun testHttpEngine() {
+        val params: String = "test"
+        HttpUtils.with(this).url("").get().addParams("",params).execute()
     }
 
     private fun initTitleBar() {
