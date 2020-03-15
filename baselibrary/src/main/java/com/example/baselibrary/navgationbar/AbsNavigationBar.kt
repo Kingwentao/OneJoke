@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.baselibrary.R
 
 /**
  * author: created by wentaoKing
@@ -29,9 +28,13 @@ open class AbsNavigationBar<T :AbsNavigationBar.Builder.AbsNavigationParams>
     fun createAndBindView(){
 
         //获取根布局
-        if (mParams.mViewGroup == null){
+        if (mParams.mViewGroup != null){
+//            val activityRoot =
+//                (mParams.mContext as Activity).findViewById<ViewGroup>(android.R.id.content)
+
+            //根据源码去拿decorView作为根布局，这样再去加载内容到跟布局就可以不受传入布局的影响
             val activityRoot =
-                (mParams.mContext as Activity).findViewById<ViewGroup>(R.id.content)
+                (mParams.mContext as Activity).window.decorView as ViewGroup
             mParams.mViewGroup = activityRoot.getChildAt(0) as ViewGroup
         }
 
@@ -41,8 +44,8 @@ open class AbsNavigationBar<T :AbsNavigationBar.Builder.AbsNavigationParams>
         //创建view
         mNavigationView = LayoutInflater.from(mParams.mContext).inflate(bindLayoutId(),
             mParams.mViewGroup,false)
-        //添加创建的view
-        mParams.mViewGroup!!.addView(mNavigationView)
+        //添加创建的view,放在头部
+        mParams.mViewGroup!!.addView(mNavigationView,0)
         //
         applyView()
     }
@@ -76,6 +79,7 @@ open class AbsNavigationBar<T :AbsNavigationBar.Builder.AbsNavigationParams>
     }
 
     override fun applyView() {
+
     }
 
     fun getParams(): T{
