@@ -1,5 +1,6 @@
 package com.example.baselibrary.http
 
+import android.content.Context
 import java.lang.Exception
 
 /**
@@ -9,17 +10,23 @@ import java.lang.Exception
  */
 interface EngineCallback {
 
-    companion object{
+    companion object {
 
         //实现一个默认的callBack
-         val DEFAULT_ENGINE_CALLBACK = object : EngineCallback{
-             override fun onError(e: Exception) {
-             }
+        val DEFAULT_ENGINE_CALLBACK = object : EngineCallback {
 
-             override fun onSuccess(message: String) {
-             }
+            override fun onPreExecute(context: Context, params: MutableMap<String, Any>) {
 
-         }
+            }
+
+
+            override fun onError(e: Exception) {
+            }
+
+            override fun onSuccess(message: String) {
+            }
+
+        }
     }
 
 
@@ -27,5 +34,9 @@ interface EngineCallback {
 
     fun onSuccess(message: String)
 
+    /**
+     * 执行前的准备
+     */
+    fun onPreExecute(context: Context, params: MutableMap<String, Any>)
 
 }

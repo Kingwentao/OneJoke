@@ -3,6 +3,7 @@ package com.example.baselibrary.http
 import android.content.Context
 import android.util.ArrayMap
 import java.lang.Exception
+import java.lang.reflect.ParameterizedType
 import java.util.*
 
 /**
@@ -12,17 +13,16 @@ import java.util.*
  */
 class HttpUtils{
 
-    private var mContext: Context? = null
+    private var mContext: Context
     private var mParams: ArrayMap<String, Any>
     private var mUrl: String? = null
 
     companion object {
 
         private const val GET_TYPE = 0x0011
-        private const val POST_TYPE = 0x0011
+        private const val POST_TYPE = 0x0022
 
         private var mType = GET_TYPE
-
 
         //默认okhttp引擎
         private var mHttpEngine: IHttpEngine = OkHttpEngine()
@@ -39,11 +39,11 @@ class HttpUtils{
             return HttpUtils(context)
         }
 
-
         /**
          * 拼接参数
          */
         fun jointParams(url: String, params: Map<String, Any>?): String {
+            
             if (params == null || params.isEmpty()) {
                 return url
             }
@@ -66,6 +66,14 @@ class HttpUtils{
             return stringBuffer.toString()
         }
 
+        /**
+         * 解析一个类上面的class信息
+         */
+        fun analysisClazzInfo(any: Any): Class<*> {
+            val genType = any.javaClass.genericSuperclass
+            val params = (genType as ParameterizedType).actualTypeArguments
+            return params[0] as Class<*>
+        }
     }
 
 
@@ -101,7 +109,12 @@ class HttpUtils{
     }
 
     fun execute(engineCallback: EngineCallback?) {
+
+
         var callback = engineCallback
+
+        callback?.onPreExecute(mContext,mParams)
+
         if (engineCallback == null) {
             callback = EngineCallback.DEFAULT_ENGINE_CALLBACK
         }
@@ -116,6 +129,7 @@ class HttpUtils{
                 post(mUrl!!, mParams, callback!!)
             }
         }
+
     }
 
     fun execute() {
@@ -123,11 +137,11 @@ class HttpUtils{
     }
 
     private fun get(url: String, params: Map<String, Any>, callback: EngineCallback) {
-        mHttpEngine.get(mContext!!,url, params, callback)
+        mHttpEngine.get(mContext,url, params, callback)
     }
 
     private fun post(url: String, params: Map<String, Any>, callback: EngineCallback) {
-        mHttpEngine.post(mContext!!,url, params, callback)
+        mHttpEngine.post(mContext,url, params, callback)
     }
 
 
