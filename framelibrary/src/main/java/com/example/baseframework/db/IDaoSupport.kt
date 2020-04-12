@@ -1,12 +1,11 @@
 package com.example.baseframework.db
 
 import android.database.sqlite.SQLiteDatabase
-import com.example.baseframework.db.curd.QuerySupport
 
 /**
  * author: created by wentaoKing
  * date: created in 2020-03-22
- * description:
+ * description: 定义数据库dao层接口，为了后面可扩展
  */
 interface IDaoSupport<T> {
 
@@ -15,12 +14,13 @@ interface IDaoSupport<T> {
     fun insert(t: T): Long
 
     // 批量插入  检测性能
-    fun insert(datas: List<T>)
+    fun insert(datas: MutableList<T>)
 
     // 获取专门查询的支持类
   //  fun querySupport(): QuerySupport<T>
 
-    // 按照语句查询
+    // 查询所有
+    fun query(): MutableList<T>
 
 
     fun delete(whereClause: String, vararg whereArgs: String): Int

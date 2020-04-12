@@ -6,7 +6,7 @@ import java.util.*
 /**
  * author: created by wentaoKing
  * date: created in 2020-03-22
- * description:
+ * description: dao工具类
  */
 class DaoUtil {
 
