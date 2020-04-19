@@ -4,18 +4,24 @@ import android.content.Context
 import android.util.ArrayMap
 import java.lang.Exception
 import java.lang.reflect.ParameterizedType
-import java.util.*
 
 /**
  * author: created by wentaoKing
  * date: created in 2020-03-15
  * description: http请求的工具类
  */
-class HttpUtils{
+class HttpUtils {
 
     private var mContext: Context
     private var mParams: ArrayMap<String, Any>
     private var mUrl: String? = null
+    // 是否读取缓存
+    private var mCache = false
+
+    private constructor(context: Context) {
+        mContext = context
+        mParams = ArrayMap()
+    }
 
     companion object {
 
@@ -25,7 +31,7 @@ class HttpUtils{
         private var mType = GET_TYPE
 
         //默认okhttp引擎
-        private var mHttpEngine: IHttpEngine = OkHttpEngine()
+        private lateinit var mHttpEngine: IHttpEngine
 
         fun init(httpEngine: IHttpEngine) {
             mHttpEngine = httpEngine
@@ -43,7 +49,7 @@ class HttpUtils{
          * 拼接参数
          */
         fun jointParams(url: String, params: Map<String, Any>?): String {
-            
+
             if (params == null || params.isEmpty()) {
                 return url
             }
@@ -76,12 +82,6 @@ class HttpUtils{
         }
     }
 
-
-    private constructor(context: Context) {
-        mContext = context
-        mParams = ArrayMap()
-    }
-
     fun get(): HttpUtils {
         mType = GET_TYPE
         return this
@@ -94,6 +94,12 @@ class HttpUtils{
 
     fun url(url: String): HttpUtils {
         this.mUrl = url
+        return this
+    }
+
+    // 是否配置缓存
+    fun cache(isCache: Boolean): HttpUtils {
+        mCache = isCache
         return this
     }
 
@@ -110,10 +116,9 @@ class HttpUtils{
 
     fun execute(engineCallback: EngineCallback?) {
 
-
         var callback = engineCallback
 
-        callback?.onPreExecute(mContext,mParams)
+        callback?.onPreExecute(mContext, mParams)
 
         if (engineCallback == null) {
             callback = EngineCallback.DEFAULT_ENGINE_CALLBACK
@@ -137,11 +142,11 @@ class HttpUtils{
     }
 
     private fun get(url: String, params: Map<String, Any>, callback: EngineCallback) {
-        mHttpEngine.get(mContext,url, params, callback)
+        mHttpEngine.get(mCache, mContext, url, params, callback)
     }
 
     private fun post(url: String, params: Map<String, Any>, callback: EngineCallback) {
-        mHttpEngine.post(mContext,url, params, callback)
+        mHttpEngine.post(mCache, mContext, url, params, callback)
     }
 
 

@@ -1,7 +1,10 @@
-package com.example.baselibrary.http
+package com.example.baseframework.http
 
 import android.content.Context
 import android.util.Log
+import com.example.baselibrary.http.EngineCallback
+import com.example.baselibrary.http.HttpUtils
+import com.example.baselibrary.http.IHttpEngine
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -19,6 +22,7 @@ class OkHttpEngine : IHttpEngine {
     private val mOkHttpClient = OkHttpClient()
 
     override fun get(
+        isCache: Boolean,
         context: Context,
         url: String,
         params: Map<String, Any>,
@@ -27,6 +31,15 @@ class OkHttpEngine : IHttpEngine {
 
         val joinUrl = HttpUtils.jointParams(url, params)
         Log.e("Get请求路径：", joinUrl)
+
+        //判断是否从缓存中加载
+        if (isCache){
+            val resultJson = CacheDataUtil.getCacheResultJson(joinUrl)
+            if (!resultJson.isNullOrEmpty()){
+                // 需要缓存，而且数据库有缓存,直接就去执行，里面执行成功
+                callback.onSuccess(resultJson)
+            }
+        }
 
         val requestBuilder = Request.Builder().url(joinUrl).tag(context)
         //可以省略，默认是GET请求
@@ -40,8 +53,24 @@ class OkHttpEngine : IHttpEngine {
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val resultJson = response.body!!.string()
+
+                if (isCache){
+                    //判断缓存内容是否一致
+                    val cacheResultJson = CacheDataUtil.getCacheResultJson(joinUrl)
+                    if (!cacheResultJson.isNullOrEmpty()){
+                        if (cacheResultJson == resultJson){
+                            return
+                        }
+                    }
+                }
+
                 callback.onSuccess(resultJson)
                 Log.e("Get返回结果：", resultJson)
+
+                if (isCache){
+                    // 2.3 缓存数据
+                    CacheDataUtil.cacheData(joinUrl, resultJson)
+                }
             }
         })
     }
@@ -50,13 +79,15 @@ class OkHttpEngine : IHttpEngine {
      * OkHttp的post请求
      */
     override fun post(
+        isCache: Boolean,
         context: Context,
         url: String,
         params: Map<String, Any>,
         callback: EngineCallback
     ) {
 
-        val jointUrl = HttpUtils.jointParams(url, params)  //打印
+        val jointUrl =
+            HttpUtils.jointParams(url, params)  //打印
         Log.e("Post请求路径：", jointUrl)
 
         val requestBody = appendBody(params)

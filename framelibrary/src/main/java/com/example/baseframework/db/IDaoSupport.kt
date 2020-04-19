@@ -1,6 +1,7 @@
 package com.example.baseframework.db
 
 import android.database.sqlite.SQLiteDatabase
+import com.example.baseframework.db.curd.QuerySupport
 
 /**
  * author: created by wentaoKing
@@ -17,7 +18,7 @@ interface IDaoSupport<T> {
     fun insert(datas: MutableList<T>)
 
     // 获取专门查询的支持类
-  //  fun querySupport(): QuerySupport<T>
+    fun querySupport(): QuerySupport<T>
 
     // 查询所有
     fun query(): MutableList<T>

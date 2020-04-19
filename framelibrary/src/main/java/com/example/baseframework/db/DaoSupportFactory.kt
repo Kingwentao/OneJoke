@@ -17,22 +17,24 @@ object DaoSupportFactory {
     private lateinit var mSqLiteDatabase: SQLiteDatabase
 
 
-   fun init(){
-       val dbRoot =  File(
-           Environment.getExternalStorageDirectory()
-               .absolutePath + File.separator + "nhdz" + File.separator + "database")
 
-       if (!dbRoot.exists()) {
-           dbRoot.mkdirs()
-       }
-       val dbFile = File(dbRoot, "nhdz.db")
+    init {
+        val dbRoot = File(
+            Environment.getExternalStorageDirectory()
+                .absolutePath + File.separator + "nhdz" + File.separator + "database"
+        )
 
-       // 打开或者创建一个数据库
-      mSqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(dbFile, null)
+        if (!dbRoot.exists()) {
+            dbRoot.mkdirs()
+        }
+        val dbFile = File(dbRoot, "nhdz.db")
 
-   }
+        // 打开或者创建一个数据库
+        mSqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(dbFile, null)
+    }
 
-    fun <T> getDao(clazz: Class<T>): IDaoSupport<T>{
+
+    fun <T> getDao(clazz: Class<T>): IDaoSupport<T> {
         val daoSupport: IDaoSupport<T> = DaoSupport()
         daoSupport.init(mSqLiteDatabase, clazz)
         return daoSupport

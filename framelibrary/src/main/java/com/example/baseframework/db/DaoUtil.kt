@@ -1,6 +1,7 @@
 package com.example.baseframework.db
 
 import android.text.TextUtils
+import java.lang.Exception
 import java.util.*
 
 /**
@@ -10,11 +11,9 @@ import java.util.*
  */
 class DaoUtil {
 
-
     private fun DaoUtil() {
         throw UnsupportedOperationException("cannot be instantiated")
     }
-
 
     companion object {
 
@@ -36,11 +35,16 @@ class DaoUtil {
             return value
         }
 
-        fun capitalize(string: String?): String? {
+        fun capitalize(string: String?): String {
+
+
+            if (string == null ) throw Exception("string is null, please check it!")
+
             if (!TextUtils.isEmpty(string)) {
-                return string!!.substring(0, 1).toUpperCase(Locale.US) + string.substring(1)
+                return string.substring(0, 1).toUpperCase(Locale.US) + string.substring(1)
+            }else{
+                return ""
             }
-            return if (string == null) null else ""
         }
 
     }

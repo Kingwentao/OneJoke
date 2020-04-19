@@ -1,4 +1,4 @@
-package com.example.baselibrary
+package com.example.baselibrary.utils
 
 /**
  * author: WentaoKing

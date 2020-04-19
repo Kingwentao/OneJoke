@@ -52,11 +52,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             })
         }
 
-        // 测试网络框架
-        testHttpEngine()
-
-        //测试创建数据库
-        testCreateDataBase()
     }
 
 
@@ -83,37 +78,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun testCreateDataBase() {
 
-        val person = Person("jwt", 123)
-        DaoSupportFactory.init()
-        val daoSupport = DaoSupportFactory.getDao(Person::class.java)
-        testInsertDataBase(daoSupport)
-    }
 
-    private fun testInsertDataBase(daoSupport: IDaoSupport<Person>) {
-        val persons = mutableListOf<Person>()
-        for (i in 0..10) {
-            val person = Person("wentaoking${i+1}", i + 1)
-            persons.add(person)
-        }
-        daoSupport.insert(persons)
-    }
 
-    private fun testHttpEngine() {
-        HttpUtils.with(this).url("http://is.snssdk.com/2/essay/discovery/v3/")
-            .addParams("iid", "6152551759").addParams("aid", "7")
-            .execute(object : HttpCallback<DiscoverListResult>() {
-                override fun onSuccess(result: DiscoverListResult) {
-                    Log.d(TAG, "请求成功 $result")
-                }
-
-                override fun onError(e: Exception) {
-                    Log.d(TAG, "请求失败 ${e.printStackTrace()}")
-                }
-
-            })
-    }
 
     private fun initTitleBar() {
 

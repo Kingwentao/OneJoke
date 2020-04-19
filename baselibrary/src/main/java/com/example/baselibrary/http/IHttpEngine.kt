@@ -13,10 +13,10 @@ interface IHttpEngine {
     /**
      * Get请求
      */
-    fun get(context: Context,url: String, params: Map<String, Any>,callback: EngineCallback)
+    fun get(isCache: Boolean,context: Context,url: String, params: Map<String, Any>,callback: EngineCallback)
 
     /**
      * Post请求
      */
-    fun post(context: Context,url: String, params: Map<String, Any>,callback: EngineCallback)
+    fun post(isCache: Boolean,context: Context,url: String, params: Map<String, Any>,callback: EngineCallback)
 }

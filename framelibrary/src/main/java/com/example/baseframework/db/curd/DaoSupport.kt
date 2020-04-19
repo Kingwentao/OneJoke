@@ -29,7 +29,7 @@ class DaoSupport<T> : IDaoSupport<T> {
 
     private lateinit var mSqLiteDatabase: SQLiteDatabase
     private lateinit var mClazz: Class<T>
-
+    private var mQuerySupport: QuerySupport<T>? = null
 
     override fun init(sqLiteDatabase: SQLiteDatabase, clazz: Class<T>) {
         this.mSqLiteDatabase = sqLiteDatabase
@@ -240,5 +240,12 @@ class DaoSupport<T> : IDaoSupport<T> {
             methodName = "getInt"
         }
         return methodName
+    }
+
+    override fun querySupport(): QuerySupport<T> {
+        if (mQuerySupport == null) {
+            mQuerySupport = QuerySupport(mSqLiteDatabase, mClazz)
+        }
+        return mQuerySupport!!
     }
 }
