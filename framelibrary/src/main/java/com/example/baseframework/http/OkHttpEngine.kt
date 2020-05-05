@@ -33,9 +33,9 @@ class OkHttpEngine : IHttpEngine {
         Log.e("Get请求路径：", joinUrl)
 
         //判断是否从缓存中加载
-        if (isCache){
+        if (isCache) {
             val resultJson = CacheDataUtil.getCacheResultJson(joinUrl)
-            if (!resultJson.isNullOrEmpty()){
+            if (!resultJson.isNullOrEmpty()) {
                 // 需要缓存，而且数据库有缓存,直接就去执行，里面执行成功
                 callback.onSuccess(resultJson)
             }
@@ -54,11 +54,11 @@ class OkHttpEngine : IHttpEngine {
             override fun onResponse(call: Call, response: Response) {
                 val resultJson = response.body!!.string()
 
-                if (isCache){
+                if (isCache) {
                     //判断缓存内容是否一致
                     val cacheResultJson = CacheDataUtil.getCacheResultJson(joinUrl)
-                    if (!cacheResultJson.isNullOrEmpty()){
-                        if (cacheResultJson == resultJson){
+                    if (!cacheResultJson.isNullOrEmpty()) {
+                        if (cacheResultJson == resultJson) {
                             return
                         }
                     }
@@ -67,7 +67,7 @@ class OkHttpEngine : IHttpEngine {
                 callback.onSuccess(resultJson)
                 Log.e("Get返回结果：", resultJson)
 
-                if (isCache){
+                if (isCache) {
                     // 2.3 缓存数据
                     CacheDataUtil.cacheData(joinUrl, resultJson)
                 }
@@ -79,15 +79,11 @@ class OkHttpEngine : IHttpEngine {
      * OkHttp的post请求
      */
     override fun post(
-        isCache: Boolean,
-        context: Context,
-        url: String,
-        params: Map<String, Any>,
-        callback: EngineCallback
+        isCache: Boolean, context: Context, url: String,
+        params: Map<String, Any>, callback: EngineCallback
     ) {
 
-        val jointUrl =
-            HttpUtils.jointParams(url, params)  //打印
+        val jointUrl = HttpUtils.jointParams(url, params)  //打印
         Log.e("Post请求路径：", jointUrl)
 
         val requestBody = appendBody(params)

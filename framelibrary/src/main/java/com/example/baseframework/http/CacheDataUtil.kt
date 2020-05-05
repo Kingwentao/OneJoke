@@ -16,13 +16,13 @@ class CacheDataUtil {
         fun getCacheResultJson(finalUrl: String): String? {
             val dataDaoSupport = DaoSupportFactory.getDao(CacheData::class.java)
             val finalUrls = arrayOf(MD5Util.string2MD5(finalUrl))
-            val cacheDatas = dataDaoSupport.querySupport()
+            val cacheData = dataDaoSupport.querySupport()
                 // finalUrl http:w 报错  finalUrl -> MD5处理
                 .selection("mUrlKey = ?").selectionArgs(finalUrls).query()
 
-            if (cacheDatas.isNotEmpty()) {
-                val cacheData: CacheData = cacheDatas[0]
-                return cacheData.mResultJson
+            if (cacheData.isNotEmpty()) {
+                val data: CacheData = cacheData[0]
+                return data.mResultJson
             }
             return null
         }

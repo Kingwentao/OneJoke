@@ -10,6 +10,8 @@ import java.security.NoSuchAlgorithmException
  * description: md5工具类
  */
 object MD5Util {
+
+
     /**利用MD5进行加密
      * @param inStr  待加密的字符串
      * @return  加密后的字符串
@@ -41,4 +43,6 @@ object MD5Util {
         }
         return hexValue.toString()
     }
+
+
 }

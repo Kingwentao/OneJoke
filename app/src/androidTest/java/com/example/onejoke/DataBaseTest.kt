@@ -19,7 +19,6 @@ class DataBaseTest {
     private fun testCreateDataBase() {
 
         val person = Person("jwt", 123)
-        DaoSupportFactory.init()
         val daoSupport = DaoSupportFactory.getDao(Person::class.java)
         testInsertDataBase(daoSupport)
     }
