@@ -24,7 +24,7 @@ import java.io.File
 import java.lang.Exception
 
 
-class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
 
 
     companion object {
@@ -41,26 +41,24 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //请求权限
         requestSomePermission()
 
-        btnComment.setOnClickListener {
-
-            testSkin()
-
-            val dialog = AlertDialog.Builder(this)
-                .setContentView(R.layout.detail_comment_dialog)
-                .setText(R.id.btnSubmit, "发送")
-                .fromTop()
-                .setFullWidth()
-                .show()
-
-            //
-            dialog.setOnClickListener(R.id.account_icon_weibo, View.OnClickListener {
-                Toast.makeText(this, "分享到微博", Toast.LENGTH_LONG).show()
-            })
-        }
+//        btnComment.setOnClickListener {
+//
+//            testSkin()
+//
+//            val dialog = AlertDialog.Builder(this)
+//                .setContentView(R.layout.detail_comment_dialog)
+//                .setText(R.id.btnSubmit, "发送")
+//                .fromTop()
+//                .setFullWidth()
+//                .show()
+//
+//            //
+//            dialog.setOnClickListener(R.id.account_icon_weibo, View.OnClickListener {
+//                Toast.makeText(this, "分享到微博", Toast.LENGTH_LONG).show()
+//            })
+//        }
 
     }
-
-
 
     private fun initTitleBar() {
 
@@ -69,7 +67,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 .setTitle("投稿")
                 .setRightText("右边的文本")
                 .builder()
-
     }
 
     //测试更换皮肤
