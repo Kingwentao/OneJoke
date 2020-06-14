@@ -1,4 +1,4 @@
-package com.example.onejoke
+package com.example.baselibrary.base
 
 import androidx.appcompat.app.AppCompatActivity
 

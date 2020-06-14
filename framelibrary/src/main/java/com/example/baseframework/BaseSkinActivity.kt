@@ -1,4 +1,4 @@
-package com.example.onejoke
+package com.example.baseframework
 
 import android.content.Context
 import android.os.Build
@@ -9,15 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewParent
 import androidx.appcompat.R
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatViewInflater
 import androidx.appcompat.widget.VectorEnabledTintResources
 import androidx.core.view.LayoutInflaterCompat
 import androidx.core.view.ViewCompat
 import com.example.baseframework.skin.SkinAttrSupport
+import com.example.baseframework.skin.SkinManager
 import com.example.baseframework.skin.attr.SkinAttr
 import com.example.baseframework.skin.attr.SkinView
 import com.example.baseframework.skin.support.SkinAppCompatViewInflater
+import com.example.baselibrary.base.BaseActivity
 import org.xmlpull.v1.XmlPullParser
 
 /**
@@ -83,19 +84,14 @@ open class BaseSkinActivity : BaseActivity() {
         val view = createView(parent, name, context, attrs)
 
         //2. 解析属性（src、textColor、background...）
-        Log.e(TAG,"view = $view")
+        Log.e(TAG, "view = $view")
         //2.1 一个 activity对应多个这样的SkinView
-
-
-
-        if (view != null){
-            val skinArrAttrs: MutableList<SkinAttr> = SkinAttrSupport.getSkinAttrs(context,attrs)
-            val skinView = SkinView(view,skinArrAttrs)
+        if (view != null) {
+            val skinArrAttrs: MutableList<SkinAttr> = SkinAttrSupport.getSkinAttrs(context, attrs)
+            val skinView = SkinView(view, skinArrAttrs)
+            // 3. 统一交给SkinManager处理
+            managerSKinView(skinView)
         }
-
-
-        // 3. 统一交给SkinManager处理
-        managerSKinView()
 
         return view
     }
@@ -103,15 +99,20 @@ open class BaseSkinActivity : BaseActivity() {
     /**
      * 统一管理SkinView
      */
-    private fun managerSKinView() {
+    private fun managerSKinView(skinView: SkinView) {
+
+        var skinViews = SkinManager.getInstance().getSkinViews(this)
+
+        if (skinViews == null) {
+            skinViews = mutableListOf()
+            SkinManager.getInstance().register(this, skinViews)
+        }
+        skinViews.add(skinView)
 
     }
 
 
-    fun createView(
-        parent: View?, name: String, context: Context,
-        attrs: AttributeSet
-    ): View? {
+    fun createView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
         if (mAppCompatViewInflater == null) {
             val a = obtainStyledAttributes(R.styleable.AppCompatTheme)
             val viewInflaterClassName = a.getString(R.styleable.AppCompatTheme_viewInflaterClass)

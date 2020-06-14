@@ -9,7 +9,7 @@ import com.example.baseframework.skin.attr.SkinType
 /**
  * author: created by wentaoKing
  * date: created in 2020-06-07
- * description:
+ * description: 皮肤属性支持类
  */
 class SkinAttrSupport {
 

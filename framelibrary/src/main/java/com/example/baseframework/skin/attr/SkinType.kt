@@ -1,5 +1,11 @@
 package com.example.baseframework.skin.attr
 
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import com.example.baseframework.skin.SkinManager
+import com.example.baseframework.skin.SkinResource
+
 /**
  * author: created by wentaoKing
  * date: created in 2020-06-07
@@ -8,19 +14,50 @@ package com.example.baseframework.skin.attr
 enum class SkinType(val mResName: String) {
 
     TEXT_COLOR("textColor") {
-        override fun skin() {
+        override fun skin(view: View, resName: String) {
+            val skinResource = getSkinResource() ?: return
+            val color = skinResource.getColorByName(resName) ?: return
+            val textView = view as TextView
+            textView.setTextColor(color.defaultColor)
+        }
+    },
+    BACKGROUND("background") {
+        override fun skin(view: View, resName: String) {
+            val skinResource = getSkinResource() ?: return
+
+            //背景如果是图片
+            val drawable = skinResource.getDrawableByName(resName)
+            if (drawable != null) {
+                val imageView = view as ImageView
+                imageView.background = drawable
+                return
+            }
+
+            //背景如果是颜色
+            val color = skinResource.getColorByName(resName)
+            if (color != null) {
+                val textView = view as TextView
+                textView.setTextColor(color.defaultColor)
+            }
 
         }
-    },BACKGROUND("background") {
-        override fun skin() {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    },SRC("src") {
-        override fun skin() {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    },
+    SRC("src") {
+        override fun skin(view: View, resName: String) {
+            val skinResource = getSkinResource() ?: return
+            //背景如果是图片
+            val drawable = skinResource.getDrawableByName(resName)
+            if (drawable != null) {
+                val imageView = view as ImageView
+                imageView.setImageDrawable(drawable)
+            }
+
         }
     };
 
+    fun getSkinResource(): SkinResource? {
+        return SkinManager.getInstance().getSkinResource()
+    }
 
-    abstract fun skin()
+    abstract fun skin(view: View, resName: String)
 }

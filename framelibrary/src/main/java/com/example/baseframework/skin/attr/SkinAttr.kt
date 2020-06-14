@@ -9,7 +9,11 @@ import android.view.View
  */
 class SkinAttr(private var mResName: String, private val mType: SkinType) {
 
+    /**
+     * 换肤
+     * @param view 换肤的view
+     */
     fun skin(view: View) {
-        // mType.skin(view,mResName)
+        mType.skin(view, mResName)
     }
 }

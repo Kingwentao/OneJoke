@@ -22,8 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BaseActivity"/>
-        <activity android:name=".BaseSkinActivity"/>
+        <activity android:name="com.example.baselibrary.base.BaseActivity"/>
+        <activity android:name="com.example.baseframework.BaseSkinActivity"/>
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ import java.lang.reflect.Method
 /**
  * author: created by wentaoKing
  * date: created in 2020-06-07
- * description:
+ * description: copy google source of AppCompatViewInflater class
  *
  * This class is responsible for manually inflating our tinted widgets.
  *

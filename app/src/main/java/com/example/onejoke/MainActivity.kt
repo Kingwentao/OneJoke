@@ -1,30 +1,24 @@
 package com.example.onejoke
 
 import android.Manifest
+import android.content.Intent
 import android.content.res.AssetManager
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.baseframework.BaseSkinActivity
 import com.example.baseframework.DefaultNavigationBar
-import com.example.baseframework.db.DaoSupportFactory
-import com.example.baseframework.db.IDaoSupport
-import com.example.baseframework.db.curd.DaoSupport
-import com.example.baseframework.http.HttpCallback
-import com.example.baselibrary.dialog.AlertDialog
-import com.example.baselibrary.http.HttpUtils
-import com.example.onejoke.model.DiscoverListResult
-import com.example.onejoke.model.Person
+import com.example.baseframework.skin.SkinManager
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
 import java.lang.Exception
 
 
-class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
+class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks, View.OnClickListener {
 
 
     companion object {
@@ -40,6 +34,8 @@ class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
 
         //请求权限
         requestSomePermission()
+
+        initListener()
 
 //        btnComment.setOnClickListener {
 //
@@ -60,6 +56,12 @@ class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
+    private fun initListener() {
+        btnChangeSkin.setOnClickListener(this)
+        btnDefaultSkin.setOnClickListener(this)
+        btnSkip.setOnClickListener(this)
+    }
+
     private fun initTitleBar() {
 
         val navigationBar =
@@ -70,27 +72,31 @@ class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     //测试更换皮肤
-    fun testSkin(){
+    fun testSkin() {
 
-        Toast.makeText(this,"换肤中...",Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "换肤中...", Toast.LENGTH_LONG).show()
         //获取resource对象
         val resources = resources
         //创建AssetManager
         val asset = AssetManager::class.java.newInstance()
         //皮肤资源的路径
-        val skinSrcPath = Environment.getExternalStorageDirectory().absolutePath.plus(File.separator).plus("red.skin")
+        val skinSrcPath =
+            Environment.getExternalStorageDirectory().absolutePath.plus(File.separator)
+                .plus("red.skin")
         try {
             //添加本地的资源皮肤
-            val method = AssetManager::class.java.getDeclaredMethod("addAssetPath",String::class.java)
-            method.invoke(asset,skinSrcPath)
-            val resource = Resources(asset,resources.displayMetrics,resources.configuration)
+            val method =
+                AssetManager::class.java.getDeclaredMethod("addAssetPath", String::class.java)
+            method.invoke(asset, skinSrcPath)
+            val resource = Resources(asset, resources.displayMetrics, resources.configuration)
             //获取皮肤资源中的id（资源name/资源类型/资源所在的包名）
-            val resourceId = resource.getIdentifier("image_src","drawable","com.example.skinplugin")
-            val drawable = resource.getDrawable(resourceId,null)
-            ivSkin.setImageDrawable(drawable)
-        }catch (e : Exception){
+            val resourceId =
+                resource.getIdentifier("image_src", "drawable", "com.example.skinplugin")
+            val drawable = resource.getDrawable(resourceId, null)
+            //ivSkin.setImageDrawable(drawable)
+        } catch (e: Exception) {
             e.printStackTrace()
-            Log.d(TAG,"换肤异常")
+            Log.d(TAG, "换肤异常")
         }
 
     }
@@ -120,6 +126,28 @@ class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.btnChangeSkin -> {
+                val skinPath = Environment.getExternalStorageDirectory().absolutePath +
+                        File.separator + "new.skin"
+                if (File(skinPath).exists()){
+                    Log.d(TAG,"file is exist!")
+                }
+                SkinManager.getInstance().init(this)
+                SkinManager.getInstance().loadSkin(skinPath)
+
+            }
+            R.id.btnDefaultSkin -> {
+                SkinManager.getInstance().recoverDefaultSkin()
+            }
+            R.id.btnSkip -> {
+                val intent = Intent(this,MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         Log.d(TAG, "权限申请失败")
@@ -136,6 +164,6 @@ class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 }
