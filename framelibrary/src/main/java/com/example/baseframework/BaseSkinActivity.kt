@@ -91,6 +91,9 @@ open class BaseSkinActivity : BaseActivity() {
             val skinView = SkinView(view, skinArrAttrs)
             // 3. 统一交给SkinManager处理
             managerSKinView(skinView)
+
+            //4. 判断是否需要换肤
+            SkinManager.getInstance(view.context).checkChangeSkin(skinView)
         }
 
         return view
@@ -101,11 +104,11 @@ open class BaseSkinActivity : BaseActivity() {
      */
     private fun managerSKinView(skinView: SkinView) {
 
-        var skinViews = SkinManager.getInstance().getSkinViews(this)
+        var skinViews = SkinManager.getInstance(this).getSkinViews(this)
 
         if (skinViews == null) {
             skinViews = mutableListOf()
-            SkinManager.getInstance().register(this, skinViews)
+            SkinManager.getInstance(this).register(this, skinViews)
         }
         skinViews.add(skinView)
 

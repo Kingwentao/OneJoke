@@ -1,5 +1,6 @@
 package com.example.baseframework.skin.attr
 
+import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,7 +16,7 @@ enum class SkinType(val mResName: String) {
 
     TEXT_COLOR("textColor") {
         override fun skin(view: View, resName: String) {
-            val skinResource = getSkinResource() ?: return
+            val skinResource = getSkinResource(view.context) ?: return
             val color = skinResource.getColorByName(resName) ?: return
             val textView = view as TextView
             textView.setTextColor(color.defaultColor)
@@ -23,7 +24,7 @@ enum class SkinType(val mResName: String) {
     },
     BACKGROUND("background") {
         override fun skin(view: View, resName: String) {
-            val skinResource = getSkinResource() ?: return
+            val skinResource = getSkinResource(view.context) ?: return
 
             //背景如果是图片
             val drawable = skinResource.getDrawableByName(resName)
@@ -44,7 +45,7 @@ enum class SkinType(val mResName: String) {
     },
     SRC("src") {
         override fun skin(view: View, resName: String) {
-            val skinResource = getSkinResource() ?: return
+            val skinResource = getSkinResource(view.context) ?: return
             //背景如果是图片
             val drawable = skinResource.getDrawableByName(resName)
             if (drawable != null) {
@@ -55,8 +56,8 @@ enum class SkinType(val mResName: String) {
         }
     };
 
-    fun getSkinResource(): SkinResource? {
-        return SkinManager.getInstance().getSkinResource()
+    fun getSkinResource(context: Context): SkinResource? {
+        return SkinManager.getInstance(context).getSkinResource()
     }
 
     abstract fun skin(view: View, resName: String)

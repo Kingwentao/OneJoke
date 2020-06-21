@@ -134,12 +134,11 @@ class MainActivity : BaseSkinActivity(), EasyPermissions.PermissionCallbacks, Vi
                 if (File(skinPath).exists()){
                     Log.d(TAG,"file is exist!")
                 }
-                SkinManager.getInstance().init(this)
-                SkinManager.getInstance().loadSkin(skinPath)
+                SkinManager.getInstance(this).loadSkin(skinPath)
 
             }
             R.id.btnDefaultSkin -> {
-                SkinManager.getInstance().recoverDefaultSkin()
+                SkinManager.getInstance(this).recoverDefaultSkin()
             }
             R.id.btnSkip -> {
                 val intent = Intent(this,MainActivity::class.java)
